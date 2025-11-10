@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'antlr'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // ANTLR: gera e executa o parser/lexer
+    antlr "org.antlr:antlr4:4.13.2"
+    implementation "org.antlr:antlr4-runtime:4.13.2"
+
+    // Testes (opcional)
+    testImplementation "org.junit.jupiter:junit-jupiter:5.11.0"
+}
+
+application {
+    // Classe principal (sem package)
+    mainClass = 'TomLangMain'
+    // Caso tenha usado package, exemplo:
+    // mainClass = 'br.tomlang.TomLangMain'
+}
+
+/* === Configuração do ANTLR === */
+sourceSets {
+    main {
+        java.srcDirs = ['src']       // Seu código Java manual
+        antlr.srcDirs = ['grammar']  // Gramática (.g4)
+    }
+}
+
+tasks.withType(org.gradle.api.plugins.antlr.AntlrTask).configureEach {
+    arguments += ['-visitor', '-no-listener']
+}
+
+/* === Compilação === */
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+/* === Testes === */
+tasks.test {
+    useJUnitPlatform()
+}
+
+/* === Permite entrada via teclado (stdin) durante o run === */
+tasks.named('run') {
+    standardInput = System.in
+}
+
+/* === Comandos úteis ===
+ - Criar wrapper:         gradle wrapper --gradle-version 8.10.2
+ - Gerar parser:          ./gradlew generateGrammarSource
+ - Compilar tudo:         ./gradlew build
+ - Executar:              ./gradlew run --args "tests/ok.mlg" (Linux/macOS)
+                          gradlew.bat run --args "tests\\ok.mlg" (Windows)
+*/

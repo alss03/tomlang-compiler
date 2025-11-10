@@ -1,0 +1,18 @@
+int i = 0;
+printf("inicio");
+do {
+  printf(i);
+  i = i + 1;
+} while (i < 3);
+
+int x = 2;
+switch (x) {
+  case 1: printf("um");   break;
+  case 2: printf("dois"); break;
+  default: printf("outro");
+}
+
+string nome;
+printf("digite seu nome:");
+scanf(nome);
+printf("Ola, " + nome);
