@@ -1,10 +1,10 @@
-# 🚀 TomLang Compilador
+# TomLang Compilador
 
 Um compilador e intérprete completo para a linguagem **TomLang**, uma linguagem imperativa simples desenvolvida com **ANTLR 4** e **Java**. O projeto implementa as três fases clássicas da compilação: análise léxica, sintática, semântica e interpretação/execução.
 
 ---
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 TomLang é uma linguagem educacional que demonstra:
 - ✅ **Análise Léxica e Sintática** via ANTLR 4.13.2
@@ -29,7 +29,7 @@ Código-fonte (.mlg)
 
 ---
 
-## 🔧 Características da Linguagem
+## Características da Linguagem
 
 ### Tipos de Dados
 - `int` — Números inteiros (32-bit)
@@ -69,7 +69,7 @@ if (idade >= 18) {
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 compilador/
@@ -106,7 +106,7 @@ compilador/
 
 ---
 
-## 🚀 Instalação e Configuração
+## Instalação e Configuração
 
 ### Pré-requisitos
 - **Java 21** (compilador suporta Java 21)
@@ -128,11 +128,11 @@ cd compilador
 
 ---
 
-## 🔨 Build e Compilação
+## Build e Compilação
 
-### Opção 1: Usar Gradle Wrapper (Recomendado) ⭐
+### Opção 1: Usar Gradle Wrapper (Recomendado)
 
-#### 1️⃣ Gerar Código do ANTLR
+### Gerar Código do ANTLR
 ```powershell
 # Windows
 .\gradlew.bat generateGrammarSource
@@ -141,7 +141,7 @@ cd compilador
 ./gradlew generateGrammarSource
 ```
 
-#### 2️⃣ Compilar o Projeto
+### Compilar o Projeto
 ```powershell
 # Windows
 .\gradlew.bat build
@@ -150,7 +150,7 @@ cd compilador
 ./gradlew build
 ```
 
-#### 3️⃣ Verificar Build
+### Verificar Build
 Se bem-sucedido, verá:
 ```
 BUILD SUCCESSFUL in X.XXs
@@ -162,7 +162,7 @@ Os arquivos compilados estarão em `build/classes/java/main/`.
 
 Se preferir compilar manualmente sem Gradle:
 
-#### 1️⃣ Gerar Código ANTLR
+### Gerar Código ANTLR
 Você precisa de ANTLR 4.13.2. Baixe em: https://www.antlr.org/download/antlr-4.13.2-complete.jar
 
 ```powershell
@@ -173,16 +173,16 @@ mkdir bin
 java -jar antlr-4.13.2-complete.jar -visitor -no-listener grammar/TomLang.g4 -o src/
 ```
 
-#### 2️⃣ Compilar Tudo
+### Compilar Tudo
 ```powershell
 javac -cp ".;antlr-4.13.2-complete.jar" -d bin src/*.java
 ```
 
 ---
 
-## 🎮 Executando Programas
+## Executando Programas
 
-### Opção 1: Com Gradle (Recomendado) ⭐
+### Opção 1: Com Gradle (Recomendado)
 
 ```powershell
 # Windows
@@ -206,7 +206,7 @@ java -cp "build/classes/java/main:antlr-4.13.2-complete.jar" TomLangMain tests/o
 
 ---
 
-## 📝 Escrevendo Programas TomLang
+## Escrevendo Programas TomLang
 
 ### Exemplo 1: Hello World Interativo
 Crie `tests/hello.mlg`:
@@ -285,7 +285,7 @@ for (int i = 0; i < 10; i = i + 1) {
 
 ---
 
-## 🧪 Testando o Compilador
+## Testando o Compilador
 
 ### Teste de Sucesso
 ```powershell
@@ -340,7 +340,7 @@ line 2: Variável 'y' não declarada
 
 ---
 
-## 🔍 Componentes Principais
+## Componentes Principais
 
 ### `TomLangMain.java`
 Orquestra todo o pipeline de compilação:
@@ -352,11 +352,11 @@ Orquestra todo o pipeline de compilação:
 
 ### `SemanticVisitor.java`
 Realiza análise semântica:
-- ✅ Verifica declaração de todas as variáveis antes do uso
-- ✅ Valida atribuições (compatibilidade de tipos)
-- ✅ Valida tipos em expressões
-- ✅ Valida tipos em condições (não pode ser string)
-- ✅ Suporta scopes em blocos e loops
+- Verifica declaração de todas as variáveis antes do uso
+- Valida atribuições (compatibilidade de tipos)
+- Valida tipos em expressões
+- Valida tipos em condições (não pode ser string)
+- Suporta scopes em blocos e loops
 
 ### `InterpreterVisitor.java`
 Executa o programa percorrendo a AST:
@@ -378,7 +378,7 @@ Coleta erros sintáticos do parser ANTLR:
 
 ---
 
-## 📊 Fases de Compilação Detalhadas
+## Fases de Compilação Detalhadas
 
 ### 1. Análise Léxica (Lexer)
 O `TomLangLexer` converte o texto em tokens:
@@ -415,7 +415,7 @@ O `InterpreterVisitor` executa a AST:
 
 ---
 
-## ⚙️ Configuração Avançada (Gradle)
+## Configuração Avançada (Gradle)
 
 ### Alterar Versão Java
 Edite `build.gradle`:
@@ -456,7 +456,7 @@ dependencies {
 
 ---
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 | Problema | Solução |
 |----------|---------|
@@ -470,7 +470,7 @@ dependencies {
 
 ---
 
-## 📚 Referência da Gramática
+## Referência da Gramática
 
 Veja o arquivo completo em `grammar/TomLang.g4`. Resumo:
 
@@ -482,7 +482,7 @@ Veja o arquivo completo em `grammar/TomLang.g4`. Resumo:
 
 ---
 
-## 🚀 Quick Start (Resumo Rápido)
+## Quick Start (Resumo Rápido)
 
 1. **Clone/Abra o projeto**
    ```powershell
@@ -506,33 +506,9 @@ Veja o arquivo completo em `grammar/TomLang.g4`. Resumo:
 
 ---
 
-## 🤝 Contribuindo
-
-Para reportar bugs ou sugerir melhorias:
-1. Crie um issue descrevendo o problema
-2. Forneça um exemplo do programa que causa o erro
-3. Descreva o comportamento esperado vs. observado
-
----
-
-## 📄 Licença
-
-Este projeto é licenciado sob MIT. Veja o repositório para detalhes.
-
----
-
-## 🔗 Referências
+## Referências
 
 - **ANTLR 4**: https://www.antlr.org/
 - **Java Documentation**: https://docs.oracle.com/en/java/
 - **Gradle**: https://gradle.org/
 
----
-
-## 🎓 Objetivo Educacional
-
-Este compilador foi desenvolvido como projeto educacional para ensinar:
-- Teoria de compiladores
-- Construção de lexers e parsers
-- Análise semântica e verificação de tipos
-- Interpretação de linguagens
