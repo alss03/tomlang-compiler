@@ -73,7 +73,7 @@ if (idade >= 18) {
 
 ```
 compilador/
-├── README.md                      # Este arquivo (ATUALIZADO)
+├── README.md                      #
 ├── build.gradle                   # Configuração Gradle
 ├── compilador.iml                 # Configuração IntelliJ IDEA
 ├── settings.gradle                # Definições Gradle
