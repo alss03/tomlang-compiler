@@ -24,7 +24,7 @@ jobs:
       - name: Setup Gradle (cache)
         uses: gradle/actions/setup-gradle@v3
         # with:
-        #   cache-read-only: true   # opcional: se o cache do GH estiver instável
+        #   cache-read-only: true   # se houver instabilidade no cache
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
