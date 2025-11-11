@@ -6,7 +6,7 @@ Um compilador e intérprete completo para a linguagem **TomLang**, uma linguagem
 
 ## Sobre o Projeto
 
-TomLang é uma linguagem educacional que demonstra:
+TomLang é uma linguagem que demonstra:
 - ✅ **Análise Léxica e Sintática** via ANTLR 4.13.2
 - ✅ **Verificação Semântica** com tabela de símbolos e scopes
 - ✅ **Interpretação/Execução** em tempo real via AST visitor
