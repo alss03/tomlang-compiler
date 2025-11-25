@@ -1,0 +1,19 @@
+int i = 0;
+int i = 2;                // redeclaração no mesmo escopo
+
+x = 5;                    // variável não declarada
+
+string s = "ola";
+int y = s;                // atribuição incompatível (string -> int)
+
+break;                    // break fora de loop/switch
+
+if ("texto") {           // condição inválida (string)
+	printf("ok");
+}
+
+int z = 1;
+switch (z) {
+	case "str": printf("caso"); // case string incompatível com switch int
+}
+
