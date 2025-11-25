@@ -3,16 +3,11 @@ import java.util.regex.Pattern;
 
 public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
 
-    // Ambiente de valores por escopo
     private final Deque<Map<String, Object>> scopes = new ArrayDeque<>();
-    // Tipos por escopo (para scanf/conversões)
     private final Deque<Map<String, SymbolTable.Type>> types = new ArrayDeque<>();
-
-    // Controle de break aninhado
     private enum Ctx { LOOP, SWITCH }
     private final Deque<Ctx> breakCtx = new ArrayDeque<>();
     private Ctx breakSignal = null;
-
     private final Scanner in;
 
     public InterpreterVisitor(Scanner in) {
@@ -20,17 +15,12 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
         pushScope();
     }
 
-    /* ===== Helpers de escopo ===== */
     private void pushScope() { scopes.push(new HashMap<>()); types.push(new HashMap<>()); }
     private void popScope()  { scopes.pop(); types.pop(); }
 
     private void declare(String name, SymbolTable.Type t, Object value) {
         types.peek().put(name, t);
         scopes.peek().put(name, value);
-    }
-    private boolean isDeclared(String name) {
-        for (Map<String, Object> s : scopes) if (s.containsKey(name)) return true;
-        return false;
     }
     private SymbolTable.Type typeOf(String name) {
         for (Map<String, SymbolTable.Type> s : types) if (s.containsKey(name)) return s.get(name);
@@ -42,20 +32,15 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
     }
     private void set(String name, Object v) {
         for (Map<String, Object> s : scopes) if (s.containsKey(name)) { s.put(name, v); return; }
-        // se não achar, cria no topo (não deve acontecer se semântica passou)
         scopes.peek().put(name, v);
     }
 
-    /* ===== Execução de topo ===== */
     @Override
     public Object visitProg(TomLangParser.ProgContext ctx) {
-        for (var c : ctx.children) {
-            visit(c);
-        }
+        for (var c : ctx.children) visit(c);
         return null;
     }
 
-    /* ===== Declarações e comandos ===== */
     @Override
     public Object visitDecl(TomLangParser.DeclContext ctx) {
         String name = ctx.ID().getText();
@@ -120,15 +105,12 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
 
     @Override
     public Object visitForStmt(TomLangParser.ForStmtContext ctx) {
-        pushScope();              // escopo do for (init/update)
+        pushScope();
         breakCtx.push(Ctx.LOOP);
-        // init
         if (ctx.forInit().getText().length() > 0) visit(ctx.forInit());
-        // cond
         while (ctx.forCond() == null || truthy(eval(ctx.forCond().expr()))) {
             visit(ctx.block());
             if (breakSignal == Ctx.LOOP) { breakSignal = null; break; }
-            // update
             if (ctx.forUpdate() != null) visit(ctx.forUpdate());
         }
         breakCtx.pop();
@@ -146,10 +128,8 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
     public Object visitSwitchStmt(TomLangParser.SwitchStmtContext ctx) {
         Object key = eval(ctx.expr());
         breakCtx.push(Ctx.SWITCH);
-
         boolean matched = false;
 
-        // percorre cases
         for (var sect : ctx.switchSection()) {
             Object label = evalSwitchLabel(sect.switchLabel());
             boolean eq = equalsValue(key, label);
@@ -157,20 +137,15 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
                 matched = true;
                 for (var s : sect.stmt()) {
                     visit(s);
-                    if (breakSignal == Ctx.SWITCH) { breakSignal = null; break; }
+                    if (breakSignal == Ctx.SWITCH) {
+                        break;
+                    }
                 }
-                if (matched && breakSignal == null) {
-                    // caiu sem break; continua “fall-through” somente se não houve break
-                    // (com esse modelo, já continuamos naturalmente)
-                }
-                if (breakSignal == null) {
-                    // se houve break, já limpamos; se não, seguimos para próximo case (fall-through)
+                if (breakSignal == Ctx.SWITCH) {
+                    breakSignal = null;
+                    break;
                 }
             }
-            if (breakSignal == null && matched) {
-                // se não houve break, seguimos em fall-through
-            }
-            if (breakSignal != null) { /* vai ser consumido mais abaixo */ }
         }
 
         if (!matched && ctx.defaultSection() != null) {
@@ -212,7 +187,6 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
         return null;
     }
 
-    /* ===== Expressões ===== */
     private Object eval(TomLangParser.ExprContext ctx)      { return visit(ctx); }
     private Object eval(TomLangParser.OrExprContext ctx)    { return visit(ctx); }
     private Object eval(TomLangParser.AndExprContext ctx)   { return visit(ctx); }
@@ -288,7 +262,7 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
                 } else {
                     val = ((Number)val).intValue() + ((Number)rhs).intValue();
                 }
-            } else { // -
+            } else {
                 if (val instanceof String || rhs instanceof String) {
                     throw new RuntimeException("Operador '-' inválido para string");
                 } else if (val instanceof Double || rhs instanceof Double) {
@@ -347,7 +321,6 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
         return eval(ctx.expr());
     }
 
-    /* ===== Utilitários ===== */
     private SymbolTable.Type toType(String t) {
         return switch (t) {
             case "int"    -> SymbolTable.Type.INT;
@@ -378,7 +351,7 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
     private boolean truthy(Object v) {
         if (v instanceof Boolean b) return b;
         if (v instanceof Number n)  return n.doubleValue() != 0.0;
-        if (v instanceof String s)  return !s.isEmpty(); // não será usado como condição por suas regras
+        if (v instanceof String s)  return !s.isEmpty();
         return v != null;
     }
     private double toDouble(Object v) {
@@ -401,7 +374,6 @@ public class InterpreterVisitor extends TomLangBaseVisitor<Object> {
         };
     }
 
-    /* ===== For init/update ===== */
     @Override
     public Object visitForInit(TomLangParser.ForInitContext ctx) {
         if (ctx.decl() != null) return visit(ctx.decl());

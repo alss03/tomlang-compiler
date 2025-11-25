@@ -21,6 +21,7 @@ dependencies {
 
     // Testes (opcional)
     testImplementation "org.junit.jupiter:junit-jupiter:5.11.0"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.9.4"
 }
 
 application {
@@ -35,6 +36,16 @@ sourceSets {
     main {
         java.srcDirs = ['src']       // Seu código Java manual
         antlr.srcDirs = ['grammar']  // Gramática (.g4)
+        java {
+            exclude 'test/**'
+        }
+    }
+}
+
+// Test sources in a separate folder to avoid overlapping with main 'src' dir
+sourceSets {
+    test {
+        java.srcDirs = ['tests_java']
     }
 }
 
